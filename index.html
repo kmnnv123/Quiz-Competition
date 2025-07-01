@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inter Class Quiz Competition Results</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green: #2ecc40;
+            --dark-bg: #181c1f;
+            --dark-bg-alt: #23272b;
+            --dark-text: #eafaf1;
+            --dark-text-alt: #b7c9c9;
+            --dark-header: #23272b;
+            --dark-footer: #23272b;
+            --dark-overlay: rgba(0,0,0,0.55);
+        }
+        /* Make grade and class selection squares smaller, but increase text size */
+        .grade-grid .grade-btn {
+            min-width: 44px;
+            min-height: 44px;
+            font-size: 1.6rem;
+            padding: 0.3rem 0.3rem;
+        }
+        @media (max-width: 600px) {
+            .grade-grid .grade-btn {
+                min-width: 36px;
+                min-height: 36px;
+                font-size: 1.3rem;
+                padding: 0.2rem 0.2rem;
+            }
+        }
+        .mobile-nav {
+            position: fixed;
+            top: 0; left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #eafaf1;
+            box-shadow: 2px 0 16px rgba(46,204,64,0.08);
+            transform: translateX(-100%);
+            transition: transform 0.35s cubic-bezier(.77,0,.18,1);
+            z-index: 10000;
+            display: block;
+        }
+        .mobile-nav.open {
+            transform: translateX(0);
+        }
+        .nav-content {
+            padding: 2rem 1.2rem 1rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.2rem;
+            align-items: flex-start;
+        }
+        .nav-link {
+            background: none;
+            border: none;
+            color: #111;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.18rem;
+            font-weight: 600;
+            padding: 0.5rem 0;
+            margin: 0;
+            cursor: pointer;
+            text-align: left;
+            width: 100%;
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: #2ecc40;
+        }
+        .nav-header {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #6c63ff;
+            margin-bottom: 1.5rem;
+            margin-left: 0.1rem;
+        }
+        .nav-close {
+            position: absolute;
+            top: 1.1rem;
+            right: 1.1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #111;
+            cursor: pointer;
+        }
+        body {
+            background: #fff;
+            color: #111;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 2.7rem;
+            color: #2ecc40;
+            letter-spacing: 1px;
+            text-align: center;
+            margin: 1.2rem 0 0.05rem 0; /* Further decreased bottom margin for less gap */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 .quiz {
+            font-family: 'Montserrat', sans-serif;
+            color: #111; /* Changed to black */
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-left: 0.5rem;
+        }
+        #stage1 h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #222;
+            letter-spacing: 0.5px;
+        }
+        footer p {
+            font-size: 0.95rem;
+            font-weight: 400;
+            color: #222;
+            margin: 0;
+        }
+        footer div {
+            font-size: 0.9rem;
+            color: #b7bfc9 !important;
+            text-align: center;
+            font-weight: 300;
+        }
+        .nav-toggle {
+            width: 100vw;
+            max-width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            background: #2ecc40;
+            color: #fff;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            cursor: pointer;
+            font-size: 0.98em;
+            font-weight: 400;
+            box-shadow: 0 2px 8px rgba(46,204,64,0.08);
+            margin: 0;
+            gap: 0.8rem;
+        }
+        .nav-toggle .hamburger-icon {
+            color: #fff;
+            opacity: 1;
+        }
+        .nav-toggle span:last-child {
+            color: #fff;
+            opacity: 1;
+        }
+        /* Overlay for mobile nav */
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.18);
+            z-index: 9999;
+        }
+        .mobile-nav.open ~ .nav-overlay {
+            display: block;
+        }
+        .grade-grid .grade-btn {
+            min-width: 44px;
+            min-height: 44px;
+            font-size: 1.6rem;
+            padding: 0.3rem 0.3rem;
+        }
+        @media (max-width: 600px) {
+            .grade-grid .grade-btn {
+                min-width: 36px;
+                min-height: 36px;
+                font-size: 1.3rem;
+                padding: 0.2rem 0.2rem;
+            }
+        }
+        .mobile-nav {
+            position: fixed;
+            top: 0; left: 0;
+            width: 260px;
+            height: 100vh;
+            background: #eafaf1;
+            box-shadow: 2px 0 16px rgba(46,204,64,0.08);
+            transform: translateX(-100%);
+            transition: transform 0.35s cubic-bezier(.77,0,.18,1);
+            z-index: 10000;
+            display: block;
+        }
+        .mobile-nav.open {
+            transform: translateX(0);
+        }
+        .nav-content {
+            padding: 2rem 1.2rem 1rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.2rem;
+            align-items: flex-start;
+        }
+        .nav-link {
+            background: none;
+            border: none;
+            color: #111;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.18rem;
+            font-weight: 600;
+            padding: 0.5rem 0;
+            margin: 0;
+            cursor: pointer;
+            text-align: left;
+            width: 100%;
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: #2ecc40;
+        }
+        .nav-header {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #6c63ff;
+            margin-bottom: 1.5rem;
+            margin-left: 0.1rem;
+        }
+        .nav-close {
+            position: absolute;
+            top: 1.1rem;
+            right: 1.1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #111;
+            cursor: pointer;
+        }
+        body {
+            background: #fff;
+            color: #111;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 2.7rem;
+            color: #2ecc40;
+            letter-spacing: 1px;
+            text-align: center;
+            margin: 1.2rem 0 0.05rem 0; /* Further decreased bottom margin for less gap */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 .quiz {
+            font-family: 'Montserrat', sans-serif;
+            color: #111; /* Changed to black */
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-left: 0.5rem;
+        }
+        #stage1 h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #222;
+            letter-spacing: 0.5px;
+        }
+        footer p {
+            font-size: 0.95rem;
+            font-weight: 400;
+            color: #222;
+            margin: 0;
+        }
+        footer div {
+            font-size: 0.9rem;
+            color: #b7bfc9 !important;
+            text-align: center;
+            font-weight: 300;
+        }
+        /* Dark mode styles */
+        body {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        header {
+            background: var(--dark-header);
+        }
+        h1 {
+            color: var(--green);
+        }
+        h1 .quiz {
+            color: #fff;
+        }
+        .nav-toggle {
+            background: var(--green);
+            color: #fff;
+            border-bottom: 2px solid var(--green);
+        }
+        .nav-toggle .hamburger-icon,
+        .nav-toggle span:last-child {
+            color: #fff;
+        }
+        .mobile-nav {
+            background: var(--dark-bg-alt);
+            box-shadow: 2px 0 16px var(--dark-overlay);
+        }
+        .nav-content {
+            color: var(--dark-text);
+        }
+        .nav-link {
+            color: var(--dark-text);
+        }
+        .nav-link:hover {
+            color: var(--green);
+        }
+        .nav-header {
+            color: var(--green);
+        }
+        .nav-close {
+            color: var(--dark-text);
+        }
+        .nav-overlay {
+            background: var(--dark-overlay);
+        }
+        .grade-grid .grade-btn {
+            background: var(--dark-bg-alt);
+            color: var(--dark-text);
+            border: 1.5px solid var(--green);
+        }
+        .grade-grid .grade-btn:hover {
+            background: var(--green);
+            color: #fff;
+        }
+        .back-btn {
+            background: var(--dark-bg-alt);
+            color: var(--green);
+            border: 1.5px solid var(--green);
+        }
+        .back-btn:hover {
+            background: var(--green);
+            color: #fff;
+        }
+        .stage-section {
+            background: var(--dark-bg-alt);
+            border-radius: 1.2rem;
+            box-shadow: 0 2px 16px rgba(46,204,64,0.08);
+            padding: 1.2rem 1.2rem 2.2rem 1.2rem;
+            margin: 1.2rem auto 2.2rem auto;
+            max-width: 700px;
+        }
+        #stage1 h2, #stage2 h2, #stage3 h2 {
+            color: var(--green);
+        }
+        table {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+            border-radius: 0.7rem;
+            border: 1.5px solid var(--green);
+            width: 100%;
+            margin: 1.2rem 0;
+        }
+        th, td {
+            border-bottom: 1px solid #222;
+        }
+        th {
+            background: var(--dark-bg-alt);
+            color: var(--green);
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        td {
+            color: var(--dark-text-alt);
+        }
+        /* Splash screen dark mode */
+        #splash-screen {
+            background: var(--dark-bg-alt);
+        }
+        #splash-screen h2, #splash-screen div {
+            color: var(--dark-text);
+        }
+        /* Footer dark mode */
+        footer {
+            background: var(--dark-footer);
+            color: var(--dark-text-alt);
+        }
+        footer p, footer div {
+            color: var(--dark-text-alt);
+        }
+        /* Lock icon color stays green */
+        .stage-section svg {
+            filter: none;
+        }
+        /* Responsive tweaks for dark mode */
+        @media (max-width: 600px) {
+            .stage-section {
+                padding: 0.7rem 0.2rem 1.2rem 0.2rem;
+            }
+        }
+        #rankers-names {
+            background: none;
+            color: #fff;
+        }
+        #rankers-names li {
+            color: #fff;
+        }
+        #class-title {
+            color: var(--green);
+        }
+        #rankers-list {
+            background: var(--dark-bg);
+            border-radius: 0.7rem;
+            box-shadow: 0 2px 12px rgba(46,204,64,0.08);
+            padding: 1.1rem 1.2rem 1.2rem 1.2rem;
+            margin: 1.2rem 0 1.2rem 0;
+        }
+        #rankers-list ol {
+            background: none;
+            padding-left: 1.2rem;
+        }
+        #rankers-list li {
+            color: var(--dark-text-alt);
+        }
+        /* Calendar squares for Stage 2 */
+        .stage2-calendar-row {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 0.7rem;
+            margin-top: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+        .stage2-calendar-square {
+            width: 2.7rem;
+            height: 2.7rem;
+            background: linear-gradient(135deg, #2ecc40 60%, #b7ffc9 100%);
+            color: #181c1f;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(46,204,64,0.10);
+        }
+        .stage2-calendar-label {
+            text-align: center;
+            color: var(--green);
+            font-size: 1.08rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="splash-screen" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:#eafaf1;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity 0.5s;">
+        <img src="/assets/Untitled-2.png" alt="Quiz Competition" style="max-width:260px;width:60vw;max-height:260px;border-radius:1.5rem;margin-bottom:2rem;display:block;margin-left:auto;margin-right:auto;" />
+        <h2 style="color:#111;font-size:1.3rem;font-weight:700;letter-spacing:1px;text-align:center;margin-bottom:0.5rem;">Board Of Prefects 25</h2>
+        <div style="color:#111;font-size:1.1rem;font-weight:500;text-align:center;">St Benedict's College</div>
+    </div>
+    <header>
+        <h1>
+            <span style="font-family:'Playfair Display',serif;color:#2ecc40;">Inter-Class</span>
+            <span>
+                <span class="quiz">QUIZ</span> Competition
+            </span>
+        </h1>
+        <button class="nav-toggle" onclick="toggleNav()">
+            <span class="hamburger-icon">&#9776;</span>
+            <span>Stages</span>
+        </button>
+        <nav id="mobile-nav" class="mobile-nav">
+            <div class="nav-content">
+                <button class="nav-close" onclick="toggleNav()">&times;</button>
+                <button class="nav-link" onclick="navigateToSection('stage1')">Stage 1 - Written Exam</button>
+                <button class="nav-link" onclick="navigateToSection('stage2')">Stage 2 - Inter Class</button>
+                <button class="nav-link" onclick="navigateToSection('stage3')">Stage 3 - Grand Finale</button>
+            </div>
+        </nav>
+        <div class="nav-overlay" id="nav-overlay" onclick="closeNavOnOverlay(event)"></div>
+    </header>
+    <main>
+        <section id="stage1" class="stage-section">
+            <h2>Stage 1: Written Exam Results</h2>
+            <div id="grade-select" class="grade-grid">
+                <button class="grade-btn" data-grade="6">6</button>
+                <button class="grade-btn" data-grade="7">7</button>
+                <button class="grade-btn" data-grade="8">8</button>
+                <button class="grade-btn" data-grade="9">9</button>
+                <button class="grade-btn" data-grade="10">10</button>
+                <button class="grade-btn" data-grade="11">11</button>
+            </div>
+            <div id="class-select" class="grade-grid" style="display:none;"></div>
+            <button class="back-btn" id="back-to-grades" style="display:none;margin-bottom:2rem;">&larr; Back to Grades</button>
+            <div id="rankers-list" style="display:none;">
+                <button class="back-btn" id="back-to-classes">&larr; Back to Classes</button>
+                <h3 id="class-title"></h3>
+                <ol id="rankers-names"></ol>
+            </div>
+            <div id="grade-results" style="display:none;">
+                <button class="back-btn">&larr; Back to Grades</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Class</th>
+                            <th>Team Name</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-body">
+                        <!-- Results will be shown here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section id="stage2" class="stage-section" style="display:none">
+            <div style="display:flex;align-items:center;gap:0.7rem;margin:1.2rem 0 0.5rem 0;justify-content:center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 30 30"><path fill="#2ecc40" d="M 15 2 C 11.145666 2 8 5.1456661 8 9 L 8 11 L 6 11 C 4.895 11 4 11.895 4 13 L 4 25 C 4 26.105 4.895 27 6 27 L 24 27 C 25.105 27 26 26.105 26 25 L 26 13 C 26 11.895 25.105 11 24 11 L 22 11 L 22 9 C 22 5.2715823 19.036581 2.2685653 15.355469 2.0722656 A 1.0001 1.0001 0 0 0 15 2 z M 15 4 C 17.773666 4 20 6.2263339 20 9 L 20 11 L 10 11 L 10 9 C 10 6.2263339 12.226334 4 15 4 z"></path></svg>
+            </div>
+            <h2>Stage 2 - Inter Class Results</h2>
+            <div class="stage2-calendar-label">July</div>
+            <div class="stage2-calendar-row">
+                <div class="stage2-calendar-square">2</div>
+                <div class="stage2-calendar-square">3</div>
+            </div>
+        </section>
+        <section id="stage3" class="stage-section" style="display:none">
+            <div style="display:flex;align-items:center;gap:0.7rem;margin:1.2rem 0 0.5rem 0;justify-content:center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 30 30"><path fill="#2ecc40" d="M 15 2 C 11.145666 2 8 5.1456661 8 9 L 8 11 L 6 11 C 4.895 11 4 11.895 4 13 L 4 25 C 4 26.105 4.895 27 6 27 L 24 27 C 25.105 27 26 26.105 26 25 L 26 13 C 26 11.895 25.105 11 24 11 L 22 11 L 22 9 C 22 5.2715823 19.036581 2.2685653 15.355469 2.0722656 A 1.0001 1.0001 0 0 0 15 2 z M 15 4 C 17.773666 4 20 6.2263339 20 9 L 20 11 L 10 11 L 10 9 C 10 6.2263339 12.226334 4 15 4 z"></path></svg>
+            </div>
+            <h2>Stage 3 - Grand Finale Results</h2>
+            <div class="stage2-calendar-label">July</div>
+            <div class="stage2-calendar-row">
+                <div class="stage2-calendar-square">7</div>
+                <div class="stage2-calendar-square">8</div>
+            </div>
+            <p>Results will be published soon.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Inter Class Quiz Competition</p>
+        <div style="margin-top:0.5rem;font-size:0.98rem;color:#b7bfc9;text-align:center;font-weight:400;">
+            Board of Prefects 25<br>St Benedict's College
+        </div>
+    </footer>
+    <script>
+    function toggleNav() {
+        const nav = document.getElementById('mobile-nav');
+        nav.classList.toggle('open');
+        document.getElementById('nav-overlay').style.display = nav.classList.contains('open') ? 'block' : 'none';
+    }
+    function closeNavOnOverlay(e) {
+        // Only close nav, do not pass event to page
+        e.stopPropagation();
+        document.getElementById('mobile-nav').classList.remove('open');
+        document.getElementById('nav-overlay').style.display = 'none';
+    }
+    function navigateToSection(sectionId) {
+        // Close nav
+        document.getElementById('mobile-nav').classList.remove('open');
+        document.getElementById('nav-overlay').style.display = 'none';
+        // Show the correct stage section and hide others
+        document.querySelectorAll('.stage-section').forEach(sec => sec.style.display = 'none');
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.style.display = '';
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+        // Set active tab if present
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        const tabBtn = document.querySelector(`.tab-btn[data-stage="${sectionId}"]`);
+        if (tabBtn) tabBtn.classList.add('active');
+    }
+    // Hide splash after 3s
+    window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = 0;
+            setTimeout(() => splash.style.display = 'none', 500);
+        }, 3000);
+    });
+    // Dynamic tab switching for any number of stages
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Hide all stage sections
+            document.querySelectorAll('.stage-section').forEach(sec => sec.style.display = 'none');
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            // Show selected stage
+            const stageId = btn.getAttribute('data-stage');
+            document.getElementById(stageId).style.display = '';
+            btn.classList.add('active');
+        });
+    });
+    // Data for grades, classes, and top 4 rankers
+    const rankersData = {
+        6: {
+            '6A': ['A.Griffin', 'K.Pavinath', 'Ebnar Saduriyan', 'J.Samrish'],
+            '6B1': ['R.A.Bewon', 'D.Glenn', 'Elshadone Walcott', 'Arwin'],
+            '6B2': ['Misnoel', 'Senunda silva', 'Jacob casiechetty', 'Onitha mayon'],
+            '6C': ['Okinda Kithsara', 'Mesandu Dulneth', 'Yohan Rashmika', 'Fabian samarakone'],
+            '6D': ['Aryan Karunarathne', 'Leshan Idawara', 'Nethuka Diwarshana', 'Sithev'],
+            '6E': ['Yunal', 'Jayana', 'Aaron', 'Anusas'],
+            '6F': ['Sehas Menuwara Perera', 'Rashen', 'Shenel', 'Dilesh']
+        },
+        7: {
+            '7A': ['Adam Anderson Rodrigo', 'Rehan', 'Sam Joel', 'Devin'],
+            '7B1': ['Krewon Hasi', 'Aiden', 'Watson', 'Vikash'],
+            '7B2': ['Senen Fernando', 'Ronaal Rayden', 'Kevin Jonathan Anthony Christopher', 'Eleesh Elshan'],
+            '7C': ['Kesara', 'Abeeth Devnak', 'Shashel Swethan', 'Dehan Thenuka'],
+            '7D': ['Iyoan Perera', 'Rushain Nimrath Fernando', 'Kenneth Gunasekara', 'Rayan Nawalage'],
+            '7E': ['Ashen Imalsha', 'Sandaru Edirisinghe', 'Yenuka Perera', 'Diyon Menash Perera'],
+            '7F': ['Aiden', 'Dian Nimnada', 'Chrishika Nikesh', 'Sasshritha Perera']
+        },
+        8: {
+            '8A': ['K Randev', 'V.Sheron', 'Fabio', 'N.Lakshan'],
+            '8B': ['Raiden Fernando', 'S Garron', 'Abdhul Haadhie', 'Lavan Christo'],
+            '8C': ['kevin Jason rodrigo', 'Vinuth shehara', 'Javitha Perera', 'Thishan'],
+            '8D': ['Thishen onara', 'Ransha', 'Venuka shakya', 'Jerome Angelo Felthman'],
+            '8E': ['Venusha Shavin', 'R.P.Emesh', 'Tharun Weerakodi', 'Theashala'],
+            '8F': ['Methuja Dulneth', 'Savith Nayanka', 'Senesh Fernando', 'Nishith Senaja']
+        },
+        9: {
+            '9A': ['P.thanish prajin  15m', 'U. Krish. 10.25m', 'Mohanraaj 9.75 m', 'Miguel 5.5 m'],
+            '9B': ['Stefan 9 m', 'Aidan. 8m', 'D.trevon. 8m', 'Shevan 8m'],
+            '9C': ['Apurwa. 3.5 m', 'Savithu. 3.5m', 'Sanketh 3.5m', 'Humaid. 3.5m'],
+            '9D': ['Imeth inshitha 4m', 'Adeepa madushan. 4m', 'Sadila sathmitha. 4m', 'Sades alsalanka. 3m'],
+            '9E': ['Osuka. 5.5m', 'Uveen vidarshana. 5m', 'Aaraash gunarathne 4.5m', 'Nathaniel. 4.5m'],
+            '9F': ['Teshan perera. 3m', 'Aditha oshada. 3m', 'Frank Dishenk Fernando', 'Jude Midushan']
+        },
+        10: {
+            '10A': ['Harikesh prabaharan Selvan', 'S.Jerome', 'V.Renish', 'D.S.Santhosh'],
+            '10B': ['Anthony Sharon Emerson', 'Akash', 'J.Maxwell', 'Riyan Jacob'],
+            '10C': ['Rusheik Cooray', 'Isuru Shehan', 'Hirusha Chamika Deshapriya', 'Chanuga'],
+            '10D': ['Vikum Herath', 'Shenusha Gamage', 'Senura Angelo', 'Chaneshka perera'],
+            '10E': ['Dulaj Daham', 'Janitha Tharusha', 'Jehan udara Subasinghe', 'Thenuja Manchanayake'],
+            '10F': ['Eleesha Kevin', 'Renaal perera', 'kaveesha Senewirathna', 'Kavith Dabare']
+        },
+        11: {
+            '11A': ['S.harish', 'Adriel', 'Anvashman', 'Valence'],
+            '11B': ['n.abilash', 'Devesh', 'R.kandrem deen', 'A.abishek sheron'],
+            '11C': ['Deeptha nuwan', 'Savija nethmina', 'Nilana Silva', 'Omesh chamuditha'],
+            '11D': ['Gavindu', 'Mishael', 'Gishan', 'Jovel'],
+            '11E': ['Arron', 'Maneth', 'Adeesha', 'Shalanka']
+        }
+    };
+    // Elements
+    const gradeBtns = document.querySelectorAll('.grade-btn');
+    const gradeSelect = document.getElementById('grade-select');
+    const classSelect = document.getElementById('class-select');
+    const rankersList = document.getElementById('rankers-list');
+    const classTitle = document.getElementById('class-title');
+    const rankersNames = document.getElementById('rankers-names');
+    const backToClassesBtn = document.getElementById('back-to-classes');
+    const backToGradesBtn = document.getElementById('back-to-grades');
+    const backBtn = document.querySelector('.back-btn');
+    // Grade selection
+    gradeBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const grade = btn.getAttribute('data-grade');
+            // Show class selection for this grade
+            gradeSelect.style.display = 'none';
+            classSelect.style.display = '';
+            backToGradesBtn.style.display = '';
+            rankersList.style.display = 'none';
+            // Populate class grid
+            classSelect.innerHTML = '';
+            if (rankersData[grade]) {
+                Object.keys(rankersData[grade]).forEach(className => {
+                    const classBtn = document.createElement('button');
+                    classBtn.className = 'grade-btn';
+                    classBtn.textContent = className;
+                    classBtn.setAttribute('data-class', className);
+                    classBtn.setAttribute('data-grade', grade);
+                    classBtn.onclick = function() {
+                        // Show rankers for this class
+                        classSelect.style.display = 'none';
+                        backToGradesBtn.style.display = 'none';
+                        rankersList.style.display = '';
+                        classTitle.textContent = `${className} - Top 4 Rankers`;
+                        rankersNames.innerHTML = rankersData[grade][className].map(name => `<li>${name}</li>`).join('');
+                    };
+                    classSelect.appendChild(classBtn);
+                });
+            } else {
+                classSelect.innerHTML = `<p>No class data for Grade ${grade}.</p>`;
+            }
+        });
+    });
+    // Back to class selection
+    backToClassesBtn.addEventListener('click', function() {
+        rankersList.style.display = 'none';
+        classSelect.style.display = '';
+        backToGradesBtn.style.display = '';
+    });
+    // Back to grade selection
+    backToGradesBtn.addEventListener('click', function() {
+        classSelect.style.display = 'none';
+        backToGradesBtn.style.display = 'none';
+        gradeSelect.style.display = '';
+    });
+    </script>
+</body>
+</html>
