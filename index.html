@@ -515,10 +515,16 @@
             </div>
         </section>
         <section id="stage2" class="stage-section" style="display:none">
-            <div style="display:flex;align-items:center;gap:0.7rem;margin:1.2rem 0 0.5rem 0;justify-content:center;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 30 30"><path fill="#2ecc40" d="M 15 2 C 11.145666 2 8 5.1456661 8 9 L 8 11 L 6 11 C 4.895 11 4 11.895 4 13 L 4 25 C 4 26.105 4.895 27 6 27 L 24 27 C 25.105 27 26 26.105 26 25 L 26 13 C 26 11.895 25.105 11 24 11 L 22 11 L 22 9 C 22 5.2715823 19.036581 2.2685653 15.355469 2.0722656 A 1.0001 1.0001 0 0 0 15 2 z M 15 4 C 17.773666 4 20 6.2263339 20 9 L 20 11 L 10 11 L 10 9 C 10 6.2263339 12.226334 4 15 4 z"></path></svg>
-            </div>
             <h2>Stage 2 - Inter Class Results</h2>
+            <div id="stage2-grade-select" class="grade-grid">
+                <button class="grade-btn" data-stage2-grade="6">6</button>
+                <button class="grade-btn" data-stage2-grade="7">7</button>
+                <button class="grade-btn" data-stage2-grade="8">8</button>
+                <button class="grade-btn" data-stage2-grade="9">9</button>
+                <button class="grade-btn" data-stage2-grade="10">10</button>
+                <button class="grade-btn" data-stage2-grade="11">11</button>
+            </div>
+            <div id="stage2-graph-container" style="margin-top:2rem; display:none; justify-content:center;"></div>
         </section>
         <section id="stage3" class="stage-section" style="display:none">
             <div style="display:flex;align-items:center;gap:0.7rem;margin:1.2rem 0 0.5rem 0;justify-content:center;">
@@ -689,6 +695,95 @@
         classSelect.style.display = 'none';
         backToGradesBtn.style.display = 'none';
         gradeSelect.style.display = '';
+    });
+    // Stage 2 bracket graph for Grade 6
+    const stage2Bracket6 = `
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <div style="display:flex;gap:1.2rem;">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;margin-bottom:1.2rem;">6B1</div>
+          <div style="height:32px;width:2px;background:#8be04e;"></div>
+          <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;margin-top:1.2rem;">6B1</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;margin-bottom:1.2rem;">6A</div>
+          <div style="height:32px;width:2px;background:#8be04e;"></div>
+          <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;margin-top:1.2rem;">6A</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;margin-bottom:1.2rem;">6B2</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;margin-bottom:1.2rem;">6C</div>
+          <div style="height:32px;width:2px;background:#8be04e;"></div>
+          <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;margin-top:1.2rem;">6C</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;margin-bottom:1.2rem;">6D</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;margin-bottom:1.2rem;">6E</div>
+          <div style="height:32px;width:2px;background:#8be04e;"></div>
+          <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;margin-top:1.2rem;">6E</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;margin-bottom:1.2rem;">6F</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:7.5rem;margin-top:2.5rem;">
+        <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;">6B1 & 6A</div>
+        <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;">6C</div>
+      </div>
+      <div style="margin-top:2.5rem;">
+        <div style="background:#8be04e;color:#fff;font-weight:800;font-size:1.2rem;padding:0.7rem 1.5rem;border-radius:0.7rem;">6C</div>
+      </div>
+    </div>
+    `;
+    // Add event listeners for Stage 2 grade buttons
+    document.querySelectorAll('[data-stage2-grade]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const grade = btn.getAttribute('data-stage2-grade');
+            const graphContainer = document.getElementById('stage2-graph-container');
+            const gradeSelect = document.getElementById('stage2-grade-select');
+            // Finalists for each grade
+            const finalists = {
+                '6': ['6B1', '6A', '6C'],
+                '7': ['7B2', '7D'],
+                '8': ['8B', '8E'],
+                '9': ['9A', '9B'],
+                '10': ['10C', '10B'],
+                '11': ['11B', '11C']
+            };
+            if (finalists[grade]) {
+                graphContainer.innerHTML = `
+                    <div style="width:100%;display:flex;flex-direction:column;align-items:center;">
+                        <img src="assets/grade ${grade}.png" alt="Grade ${grade} Bracket" style="max-width:100%;border-radius:1.2rem;box-shadow:0 2px 16px rgba(46,204,64,0.12);background:#23272b;padding:1rem;">
+                        <div style="margin-top:2.5rem;text-align:center;">
+                            <div style="color:#8be04e;font-size:1.3rem;font-weight:800;margin-bottom:0.7rem;letter-spacing:1px;">Finalist</div>
+                            ${finalists[grade].map(f => `<div style=\"color:#fff;font-size:1.15rem;font-weight:700;\">${f}</div>`).join('')}
+                        </div>
+                        <button id="stage2-back-to-grades" class="back-btn" style="margin-top:2.2rem;">&larr; Back to Grades</button>
+                    </div>
+                `;
+                graphContainer.style.display = 'flex';
+                gradeSelect.style.display = 'none';
+                // Add event listener for back button
+                setTimeout(function() {
+                    const backBtn = document.getElementById('stage2-back-to-grades');
+                    if (backBtn) {
+                        backBtn.onclick = function() {
+                            graphContainer.innerHTML = '';
+                            graphContainer.style.display = 'none';
+                            gradeSelect.style.display = '';
+                        };
+                    }
+                }, 0);
+            } else {
+                graphContainer.innerHTML = '';
+                graphContainer.style.display = 'none';
+                gradeSelect.style.display = '';
+            }
+        });
     });
     </script>
 </body>
